@@ -1,8 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
 
-import Home from './routes/home'
-import SignIn from './routes/sign-in'
-import SignUp from './routes/sign-up'
+import { Home } from './routes/home'
+import { SignIn } from './routes/sign-in'
+import { SignUp } from './routes/sign-up'
+import { Reservations } from './routes/reservations'
+import { Spaces } from './routes/spaces'
+import { SpaceDetail } from './routes/space-detail'
 
 export default function App() {
   return (
@@ -10,6 +13,9 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/reservations" element={<Reservations />} />
+      <Route path="/spaces" element={<Spaces />} />
+      <Route path="/spaces/:id" element={<SpaceDetail />} />
     </Routes>
   )
 }

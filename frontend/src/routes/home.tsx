@@ -1,23 +1,33 @@
-import { Logo } from '@/components/logo'
-import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/useAuth'
-import { Link } from 'react-router-dom'
+import { Header } from '@/components/header'
+import { Space } from '@/components/space'
 
-export default function HomePage() {
-  const { token, signOut } = useAuth()
-
+export function Home() {
   return (
     <div>
-      <header className="max-w-6xl mx-auto flex justify-between p-8">
-        <Logo className="w-40" />
-        {token ? (
-          <Button onClick={signOut}>Sair</Button>
-        ) : (
-          <Button asChild>
-            <Link to="/sign-in">Entrar</Link>
-          </Button>
-        )}
-      </header>
+      <Header />
+
+      <main className="max-w-6xl mx-auto p-8 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Space
+          id={1}
+          name="Salão de festa"
+          imageAlt="Salão de festa"
+          image="/placeholder.svg"
+        />
+
+        <Space
+          id={2}
+          name="Salão de festa"
+          imageAlt="Salão de festa"
+          image="/placeholder.svg"
+        />
+
+        <Space
+          id={3}
+          name="Salão de festa"
+          imageAlt="Salão de festa"
+          image="/placeholder.svg"
+        />
+      </main>
     </div>
   )
 }

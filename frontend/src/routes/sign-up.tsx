@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Link } from 'react-router-dom'
 
-export default function SignUpForm() {
+export function SignUp() {
   const { signUp } = useAuth()
 
   const [email, setEmail] = useState('')
