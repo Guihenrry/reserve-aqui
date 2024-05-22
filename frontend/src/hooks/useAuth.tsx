@@ -39,8 +39,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useLocalStorage('user', null)
   const navigate = useNavigate()
 
-  console.log(user)
-
   const getUser = async (accessToken: string) => {
     const response = await api.get('/user', {
       headers: {

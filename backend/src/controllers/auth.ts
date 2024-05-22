@@ -19,8 +19,6 @@ export async function getUser(req: Request, res: Response) {
     .eq('id', userData.user.id)
     .single()
 
-  console.log(response)
-
   return res.json(response.data)
 }
 
