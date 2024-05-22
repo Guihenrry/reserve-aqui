@@ -38,7 +38,9 @@ export function SignIn() {
       onSubmit={handleSubmit}
       className="h-screen flex p-4 flex-col items-center justify-center gap-8 bg-gray-100"
     >
-      <Logo className="w-48" />
+      <Link to="/">
+        <Logo className="w-48" />
+      </Link>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>

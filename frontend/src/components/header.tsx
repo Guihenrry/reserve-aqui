@@ -13,17 +13,17 @@ import { useAuth } from '@/hooks/useAuth'
 import { MenuIcon } from 'lucide-react'
 
 export function Header() {
-  const { token, signOut } = useAuth()
+  const { isLoggedIn, signOut, user } = useAuth()
 
   return (
     <header className="max-w-6xl mx-auto flex justify-between p-8">
       <Link to="/">
         <Logo className="w-40" />
       </Link>
-      {token ? (
+      {isLoggedIn ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" className="overflow-hidden">
+            <Button size="icon" variant="outline" className="overflow-hidden">
               <MenuIcon />
             </Button>
           </DropdownMenuTrigger>
@@ -31,9 +31,11 @@ export function Header() {
             <DropdownMenuItem asChild>
               <Link to="/reservations">Minhas reservas</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/spaces">Gestão de espaços</Link>
-            </DropdownMenuItem>
+            {user?.role === 'admin' && (
+              <DropdownMenuItem asChild>
+                <Link to="/spaces">Gestão de espaços</Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>Sair</DropdownMenuItem>
           </DropdownMenuContent>

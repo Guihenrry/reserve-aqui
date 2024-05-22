@@ -40,7 +40,9 @@ export function SignUp() {
       onSubmit={handleSubmit}
       className="h-screen flex flex-col p-4 items-center justify-center gap-8 bg-gray-100"
     >
-      <Logo className="w-48" />
+      <Link to="/">
+        <Logo className="w-48" />
+      </Link>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Cadastro</CardTitle>

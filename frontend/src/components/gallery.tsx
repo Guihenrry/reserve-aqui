@@ -1,3 +1,5 @@
+import { AspectRatio } from './ui/aspect-ratio'
+
 interface Image {
   src: string
   alt: string
@@ -8,12 +10,16 @@ interface GalleryProps {
 }
 
 export function Gallery({ images }: GalleryProps) {
-  console.log(images)
-
   return (
     <div className="grid grid-cols-2 gap-5">
       {images.map((image, index) => (
-        <img key={index} src={image.src} alt={image.alt} />
+        <AspectRatio key={index} ratio={1 / 1}>
+          <img
+            className="h-full w-full object-cover"
+            src={image.src}
+            alt={image.alt}
+          />
+        </AspectRatio>
       ))}
     </div>
   )

@@ -6,6 +6,7 @@ import { SignUp } from './routes/sign-up'
 import { Reservations } from './routes/reservations'
 import { Spaces } from './routes/spaces'
 import { SpaceDetail } from './routes/space-detail'
+import { SpaceReservations } from './routes/space-reservations'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
       <Route path="/reservations" element={<Reservations />} />
       <Route path="/spaces" element={<Spaces />} />
       <Route path="/spaces/:id" element={<SpaceDetail />} />
+      <Route path="/spaces/:id/reservations" element={<SpaceReservations />} />
     </Routes>
   )
 }

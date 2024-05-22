@@ -1,4 +1,6 @@
-import { MoreHorizontal, PlusCircle } from 'lucide-react'
+import { useState } from 'react'
+import { MoreHorizontal } from 'lucide-react'
+import { format } from 'date-fns'
 
 import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
@@ -23,20 +25,33 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Space, useSpacesQuery } from '@/queries/useSpacesQuery'
+import { AddSpaceDialog } from '@/components/add-space-dialog'
+import { DeleteSpaceDialog } from '@/components/delete-space-dialog'
+import { useDeleteSpaceMutation } from '@/queries/useDeleteSpaceMutation'
+import { Link } from 'react-router-dom'
+import { EditSpaceDialog } from '@/components/edit-space-dialog'
 
 export function Spaces() {
+  const { data } = useSpacesQuery()
+  const [toDeleteId, setToDeleteId] = useState<number | null>()
+  const [spaceToEdit, setSpaceToEdit] = useState<Space | null>()
+  const deleteSpaceMutation = useDeleteSpaceMutation()
+
+  async function handleDeleteDialog() {
+    if (toDeleteId) {
+      await deleteSpaceMutation.mutateAsync(toDeleteId)
+      setToDeleteId(null)
+    }
+  }
+
   return (
     <div>
       <Header />
 
       <div className="max-w-6xl flex flex-col items-end gap-4 mx-auto p-8">
         <div>
-          <Button size="sm" className="h-7 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Adicionar espaço
-            </span>
-          </Button>
+          <AddSpaceDialog />
         </div>
         <Card className="w-full">
           <CardHeader>
@@ -63,48 +78,80 @@ export function Spaces() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="hidden sm:table-cell">
-                    <img
-                      alt="Product image"
-                      className="aspect-square rounded-md object-cover"
-                      height="64"
-                      src="/placeholder.svg"
-                      width="64"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    Laser Lemonade Machine
-                  </TableCell>
-                  <TableCell>30</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    2023-07-12 10:42 AM
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Ver reservas</DropdownMenuItem>
-                        <DropdownMenuItem>Editar</DropdownMenuItem>
-                        <DropdownMenuItem>Deletar</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                {data?.map((space) => (
+                  <TableRow key={space.id}>
+                    <TableCell className="hidden sm:table-cell">
+                      <img
+                        alt="Product image"
+                        className="aspect-square rounded-md object-cover"
+                        height="64"
+                        src={space.space_images[0]}
+                        width="64"
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <Link to={`/spaces/${space.id}`}>{space.name}</Link>
+                    </TableCell>
+                    <TableCell>{space.capacity}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {format(new Date(space.created_at), 'dd/MM/yyyy')}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Link to={`/spaces/${space.id}/reservations`}>
+                              Ver reservas
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setSpaceToEdit(space)}
+                          >
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setToDeleteId(space.id)}
+                          >
+                            Deletar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
       </div>
+
+      <DeleteSpaceDialog
+        open={!!toDeleteId}
+        onClose={() => setToDeleteId(null)}
+        onSubmit={handleDeleteDialog}
+        isLoading={deleteSpaceMutation.status === 'pending'}
+      />
+
+      {spaceToEdit && (
+        <EditSpaceDialog
+          onClose={() => setSpaceToEdit(null)}
+          space={{
+            id: spaceToEdit.id,
+            name: spaceToEdit.name,
+            capacity: spaceToEdit.capacity,
+          }}
+        />
+      )}
     </div>
   )
 }
