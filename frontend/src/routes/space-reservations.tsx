@@ -1,5 +1,4 @@
 import { Header } from '@/components/header'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -19,9 +18,6 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { format, parseISO } from 'date-fns'
 import { Link, useParams } from 'react-router-dom'
-import api from '@/services/api'
-import toast from 'react-hot-toast'
-import queryClient from '@/services/queryClient'
 import { Badge } from '@/components/ui/badge'
 import { useSpaceReservationsQuery } from '@/queries/useSpaceReservationsQuery'
 
@@ -29,20 +25,6 @@ export function SpaceReservations() {
   const { token } = useAuth()
   const { id } = useParams()
   const { data } = useSpaceReservationsQuery({ token, id })
-
-  async function handleClickCancel(id: number) {
-    try {
-      await api.patch(`/reservations/${id}/cancel`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      toast.success('Reserva cancelada com sucesso')
-      queryClient.invalidateQueries()
-    } catch (error) {
-      toast.error('Ocorreu um erro ao cancelar')
-    }
-  }
 
   return (
     <div>
